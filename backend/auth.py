@@ -4,9 +4,14 @@ from fastapi import HTTPException, status
 from datetime import datetime, timedelta    # Manejo de fechas
 from models import User
 
-SECRET_KEY = "finara_secret_key"    # Clave que usa el servidor para firmar el token (datos del usuario + SECRET_KEY = token firmado), si se intenta modificar la firma no coincidirá
-ALGORITHM = "HS256"    # Define algorítmo de la firma del JWT
-ACCESS_TOKEN_EXPIRE_MINUTES = 120    # El token será valido por 120 minutos
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")    # Clave que usa el servidor para firmar el token (datos del usuario + SECRET_KEY = token firmado), si se intenta modificar la firma no coincidirá
+ALGORITHM = os.getenv("ALGORITHM")    # Define algorítmo de la firma del JWT
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))    # El token será valido por 120 minutos
 
 
 # Función para generar tokens

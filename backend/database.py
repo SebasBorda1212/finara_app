@@ -2,7 +2,11 @@
 from sqlalchemy import create_engine    # Conexión entre Python y la base de dtos
 from sqlalchemy.orm import sessionmaker, declarative_base   # Herramientas ORM de SQLAlchemy, sessionmaker crea sesiones de base de datos
 
-DATABASE_URL = "postgresql://postgres:2805@localhost:5432/finara_db"    # URL de la base de datos
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")    # URL de la base de datos
 
 engine = create_engine(DATABASE_URL)    # Abre y administra conexiones, ejecuta consultas SQL
 

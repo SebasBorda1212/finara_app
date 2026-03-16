@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
       create: (_) => AuthProvider(),
 
       child: MaterialApp(
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.light(),
+        themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
 
         initialRoute: "/",

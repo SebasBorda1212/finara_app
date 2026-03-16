@@ -37,45 +37,283 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Register")),
 
-      body: Padding(
-        padding: const EdgeInsets.all(20),
+      backgroundColor: isDark ? const Color(0xFF0B1220) : Colors.white,
 
-        child: Column(
-          children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
 
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: "Name"),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                const SizedBox(height: 10),
+
+                //Btn atras
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+
+                const SizedBox(height: 10),
+
+                //Logo+Nombre
+                Row(
+                  children: [
+
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF18B47A),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Icon(
+                        Icons.account_balance,
+                        size: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    const Text(
+                      "Finara",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    )
+                  ],
+                ),
+
+                const SizedBox(height: 30),
+
+                //titulo
+                Text(
+                  "Únete a Finara",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                Text(
+                  "Crea una cuenta para comenzar tu\nviaje de educación financiera hoy.",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: isDark ? Colors.grey[400] : Colors.grey[700],
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+
+                //nombre
+                const Text(
+                  "NOMBRE COMPLETO",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    hintText: "Ingresa tu nombre completo",
+                    filled: true,
+                    fillColor: isDark ? Colors.black26 : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                //email
+                const Text(
+                  "CORREO ELECTRÓNICO",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    hintText: "nombre@ejemplo.com",
+                    filled: true,
+                    fillColor: isDark ? Colors.black26 : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                //password
+                const Text(
+                  "CONTRASEÑA",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: "123456",
+                    filled: true,
+                    fillColor: isDark ? Colors.black26 : Colors.grey[100],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    suffixIcon: const Icon(Icons.visibility_outlined),
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                ///Chechbox-terminos
+                Row(
+                  children: [
+
+                    Checkbox(
+                      value: false,
+                      onChanged: (value) {},
+                    ),
+
+                    Expanded(
+                      child: Text(
+                        "Acepto los Términos y Condiciones y la Política de Privacidad.",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: isDark ? Colors.grey[400] : Colors.grey[700],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+
+                const SizedBox(height: 15),
+
+                ///btn Cuenta
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+
+                  child: ElevatedButton(
+                    onPressed: register,
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0D1B2A),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+
+                    child: const Text(
+                      "Crear Cuenta",
+                      style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 247, 246, 246)),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+
+                //linea
+                Row(
+                  children: const [
+
+                    Expanded(child: Divider()),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text("O REGÍSTRATE CON"),
+                    ),
+
+                    Expanded(child: Divider()),
+                  ],
+                ),
+
+                const SizedBox(height: 25),
+
+                //btn register rapido
+                Row(
+                  children: [
+
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.g_mobiledata),
+                        label: const Text("Google"),
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.apple),
+                        label: const Text("Apple"),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 25),
+
+                //login
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+
+                    child: Text(
+                      "¿Ya tienes cuenta?  Inicia sesión",
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 30)
+
+              ],
             ),
-
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: "Email"),
-            ),
-
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: "Password"),
-              obscureText: true,
-            ),
-
-            const SizedBox(height: 30),
-
-            ElevatedButton(
-              onPressed: register,
-              child: const Text("Register"),
-            )
-
-          ],
+          ),
         ),
       ),
     );

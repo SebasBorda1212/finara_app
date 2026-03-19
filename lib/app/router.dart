@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // Asegúrate de que este import coincida con la ruta de tu archivo de vista
-import '../features/ai/view/ai_chat_page.dart'; 
+import '../features/ai/view/ai_chat_page.dart';
 
 class AppRouter {
   // Definimos las rutas estáticas

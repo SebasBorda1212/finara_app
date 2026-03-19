@@ -8,7 +8,10 @@ import os
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")    # URL de la base de datos
 
-engine = create_engine(DATABASE_URL)    # Abre y administra conexiones, ejecuta consultas SQL
+engine = create_engine(
+        DATABASE_URL,
+        connect_args={"sslmode": "require"}
+    )    # Abre y administra conexiones, ejecuta consultas SQL
 
 # Se define como se crearán las sesiones de base de datos
 SessionLocal = sessionmaker(

@@ -303,7 +303,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Text(
                       "¿Ya tienes cuenta?  Inicia sesión",
                       style: TextStyle(
-                        color: isDark ? Colors.grey[400] : const Color.fromARGB(255, 0, 32, 138),
+                        color: isDark ? Colors.grey[400] : const Color.fromARGB(255, 0, 4, 223),
                       ),
                     ),
                   ),

@@ -19,13 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF061A17) : Colors.white,
-
       body: Center(
-        
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
-
             child: Column(
               children: [
                 //logo
@@ -101,7 +98,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {},
-                    child: const Text("Forgot Password?"),
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 1, 26, 173),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -111,7 +114,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 50,
-
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF18B47A),
@@ -119,7 +121,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-
                     onPressed: () async {
                       final auth = context.read<AuthProvider>();
 
@@ -138,10 +139,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       }
                     },
-
                     child: const Text(
                       "Sign In",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(
+                          fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                     ),
                   ),
                 ),
@@ -152,12 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Don't have an account? "),
-
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, "/register");
                       },
-
                       child: const Text(
                         "Create an Account",
                         style: TextStyle(
@@ -181,9 +180,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     //googlee
                     CircleAvatar(
                       radius: 25,
-                      backgroundColor: isDark
-                          ? Colors.black26
-                          : Colors.grey[200],
+                      backgroundColor:
+                          isDark ? Colors.black26 : Colors.grey[200],
                       child: const Icon(Icons.g_mobiledata, size: 30),
                     ),
 
@@ -192,9 +190,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     //apple
                     CircleAvatar(
                       radius: 25,
-                      backgroundColor: isDark
-                          ? Colors.black26
-                          : Colors.grey[200],
+                      backgroundColor:
+                          isDark ? Colors.black26 : Colors.grey[200],
                       child: const Icon(Icons.apple),
                     ),
                   ],

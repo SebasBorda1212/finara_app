@@ -4,7 +4,8 @@ from fastapi import FastAPI    # Framework que ejecuta a fastAPI
 from database import engine    # engine es el objeto que conecta SQLAlchemy con PostgreSQL.
 from models import Base    # Base contiene la estructura de las tablas
 
-from routers import auth_routes, user_routes    # Rutas
+# 1. AÑADE "ai_routes" A ESTA LÍNEA
+from routers import auth_routes, user_routes, ai_routes    
 
 # Crea la aplicación backend
 app = FastAPI(
@@ -19,3 +20,5 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth_routes.router)
 app.include_router(user_routes.router)
 
+# 2. AÑADE ESTA LÍNEA AL FINAL PARA ACTIVAR LA IA
+app.include_router(ai_routes.router)

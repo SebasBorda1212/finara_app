@@ -41,46 +41,77 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
 
-      // 2. CUERPO CON SCROLL (ListView)
+      // 2. CUERPO CON SCROLL
       body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 20),
         children: [
+          // SECCIÓN DE ESTADÍSTICAS (NUEVO)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: StatCard(
+                    title: "COMPLETADO",
+                    count: "24",
+                    unit: "Lecciones",
+                    icon: Icons.emoji_events_outlined,
+                    accentColor: Colors.blue,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: StatCard(
+                    title: "CRÉDITOS IA",
+                    count: "850",
+                    unit: "Restantes",
+                    icon: Icons.auto_awesome,
+                    accentColor: Color(0xFF2ECC71),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 25),
+
           // SECCIÓN DE QUICK WINS (CARRUSEL)
           const FinaraQuickWins(),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 25),
 
-          // SECCIÓN DE VIDEOS POPULARES
-          _buildSectionHeader("Popular Videos"),
-          const SizedBox(height: 15),
-          SizedBox(
-            height: 200,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(left: 20),
-              children: [
-                _buildHorizontalCard("Market Cycles 101", "8:20", 0.75, primaryColor),
-                _buildHorizontalCard("Candlestick Patterns", "15:40", 0.30, primaryColor),
-              ],
+          // SECCIÓN DE ACCIONES RÁPIDAS (NUEVO)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'ACCIONES RÁPIDAS',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2),
             ),
           ),
-
-          const SizedBox(height: 30),
-
-          // SECCIÓN DE ANÁLISIS TÉCNICO
-          _buildSectionHeader("Technical Analysis"),
-          const SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                Expanded(child: _buildGridItem("Mastering RSI", "4:12", primaryColor)),
-                const SizedBox(width: 15),
-                Expanded(child: _buildGridItem("Support Zones", "6:55", primaryColor)),
-              ],
-            ),
+          const SizedBox(height: 16),
+          QuickActionTile(
+            title: "Preguntar a Finara IA",
+            subtitle: "Asesoría experta 24/7",
+            icon: Icons.chat_bubble_outline_rounded,
+            iconColor: const Color(0xFF1E8449),
+            onTap: () => Navigator.pushNamed(context, "/daiko_ai"),
+          ),
+          QuickActionTile(
+            title: "Resumen de Mercado",
+            subtitle: "Tendencias globales y datos económicos",
+            icon: Icons.bar_chart_rounded,
+            iconColor: Colors.blue,
+            onTap: () {},
+          ),
+          QuickActionTile(
+            title: "Ruta de Aprendizaje",
+            subtitle: "3 módulos por completar hoy",
+            icon: Icons.school_outlined,
+            iconColor: Colors.purple,
+            onTap: () {},
           ),
           
-          const SizedBox(height: 100), // Espacio extra abajo
+          const SizedBox(height: 80), // Espacio para que el FAB no tape el contenido
         ],
       ),
 
@@ -92,64 +123,6 @@ class HomeScreen extends StatelessWidget {
         onPressed: () => Navigator.pushNamed(context, "/daiko_ai"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-
-  // --- WIDGETS DE APOYO ---
-
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title.toUpperCase(),
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
-          const Text("See All", style: TextStyle(fontSize: 12, color: Colors.green, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHorizontalCard(String title, String duration, double progress, Color primary) {
-    return Container(
-      width: 200,
-      margin: const EdgeInsets.only(right: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 120,
-            decoration: BoxDecoration(color: primary, borderRadius: BorderRadius.circular(20)),
-            child: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                const Center(child: Icon(Icons.play_circle_outline, color: Colors.white, size: 30)),
-                Container(height: 4, width: 200 * progress, color: Colors.green),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14), maxLines: 1),
-          Text("$duration • ${(progress * 100).toInt()}% watched", style: const TextStyle(color: Colors.grey, fontSize: 11)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGridItem(String title, String duration, Color primary) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: double.infinity,
-          height: 100,
-          decoration: BoxDecoration(color: primary, borderRadius: BorderRadius.circular(20)),
-          child: const Icon(Icons.play_circle, color: Colors.white54, size: 30),
-        ),
-        const SizedBox(height: 8),
-        Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), maxLines: 2),
-      ],
     );
   }
 
@@ -175,8 +148,100 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// --- CLASE DEL CARRUSEL (Corregida) ---
+// --- WIDGETS DE APOYO AGREGADOS ---
 
+class StatCard extends StatelessWidget {
+  final String title, count, unit;
+  final IconData icon;
+  final Color accentColor;
+
+  const StatCard({super.key, required this.title, required this.count, required this.unit, required this.icon, required this.accentColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF121212) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: accentColor, size: 18),
+              const SizedBox(width: 8),
+              Text(title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(count, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
+              const SizedBox(width: 4),
+              Text(unit, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class QuickActionTile extends StatelessWidget {
+  final String title, subtitle;
+  final IconData icon;
+  final Color iconColor;
+  final VoidCallback onTap;
+
+  const QuickActionTile({super.key, required this.title, required this.subtitle, required this.icon, required this.iconColor, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF121212) : Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(color: iconColor.withOpacity(0.1), borderRadius: BorderRadius.circular(15)),
+                child: Icon(icon, color: iconColor),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
+                    Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// --- CLASE DEL CARRUSEL (Mantenida) ---
 class FinaraQuickWins extends StatelessWidget {
   const FinaraQuickWins({super.key});
 
@@ -186,16 +251,17 @@ class FinaraQuickWins extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
             'QUICK WINS',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
           ),
         ),
+        const SizedBox(height: 12),
         ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 250),
+          constraints: const BoxConstraints(maxHeight: 200),
           child: CarouselView(
-            itemExtent: 330,
+            itemExtent: 300,
             shrinkExtent: 200,
             children: [
               _buildQuickCard("INVESTING BASICS", "Mastering Bull Markets", "5 min read"),
@@ -218,36 +284,28 @@ class FinaraQuickWins extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(categoria, style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 12)),
+          Text(categoria, style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 10)),
           const SizedBox(height: 8),
           Text(titulo, 
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
           const Spacer(),
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: 8,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.access_time, color: Colors.white, size: 14),
+                  const Icon(Icons.access_time, color: Colors.white, size: 12),
                   const SizedBox(width: 4),
-                  Text(tiempo, style: const TextStyle(color: Colors.white, fontSize: 12)),
+                  Text(tiempo, style: const TextStyle(color: Colors.white, fontSize: 11)),
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF064131),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                ),
-                child: const Text("CONTINUE", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                child: const Text("CONTINUE", style: TextStyle(color: Color(0xFF064131), fontSize: 10, fontWeight: FontWeight.bold)),
+              )
             ],
           ),
         ],

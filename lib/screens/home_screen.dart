@@ -46,7 +46,7 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 20),
         children: [
           // SECCIÓN DE ESTADÍSTICAS (NUEVO)
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               children: [

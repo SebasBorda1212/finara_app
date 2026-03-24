@@ -2,6 +2,9 @@ import 'package:finara_app_v1/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/transaction_model.dart';
+import '../services/local_service.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -13,10 +16,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String name = "";
   String email = "";
 
+  List<TransactionModel> transactions = [];
+
   @override
   void initState() {
     super.initState();
     loadUser();
+    loadTransactions();
+  }
+
+  void loadTransactions() async {
+    final data = await LocalService.getAll();
+    setState(() {
+      transactions = data;
+    });
   }
 
   void loadUser() async {
@@ -104,8 +117,162 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+
+            SizedBox(height: 10),
+
+            Expanded(
+              child: ListView(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => showForm(),
+                    child: const Text("Agregar"),
+                  ),
+                  ...transactions.map((t) => ListTile(
+                        title: Text(
+                          "${t.type} - ${t.amount}",
+                          style: TextStyle(
+                            color:
+                                t.type == "ingreso" ? Colors.green : Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(t.description),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => showForm(edit: t),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => confirmDelete(t),
+                            ),
+                          ],
+                        ),
+                      ))
+                ],
+              ),
+            )
           ],
         ),
+      ),
+    );
+  }
+
+  void showForm({TransactionModel? edit}) {
+    final desc = TextEditingController(text: edit?.description);
+    final amount = TextEditingController(
+      text: edit != null ? edit.amount.toString() : "",
+    );
+    String type = edit?.type ?? "ingreso";
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(edit == null ? "Nuevo" : "Editar"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: desc,
+              decoration: const InputDecoration(labelText: "Descripción"),
+            ),
+            TextField(
+              controller: amount,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: "Monto"),
+            ),
+            DropdownButton<String>(
+              value: type,
+              isExpanded: true,
+              items: ["ingreso", "gasto"]
+                  .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e),
+                      ))
+                  .toList(),
+              onChanged: (v) => type = v!,
+            )
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () async {
+              final parsedAmount = double.tryParse(amount.text);
+
+              if (edit != null) {
+                edit.description = desc.text;
+                edit.amount = parsedAmount ?? 0;
+                edit.type = type;
+              } else {
+                transactions.add(TransactionModel(
+                  id: DateTime.now().toString(),
+                  type: type,
+                  amount: parsedAmount ?? 0,
+                  description: desc.text,
+                ));
+              }
+
+              await LocalService.saveAll(transactions);
+
+              if (!mounted) return;
+
+              setState(() {}); // refresca la UI
+
+              Navigator.pop(context);
+            },
+            child: const Text("Guardar"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void confirmDelete(TransactionModel t) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Confirmar"),
+        content: Text("¿Eliminar '${t.description}'?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () async {
+              try {
+                transactions.removeWhere((e) => e.id == t.id);
+
+                await LocalService.saveAll(transactions);
+
+                if (!mounted) return;
+
+                loadTransactions();
+                Navigator.pop(context);
+              } catch (e) {
+                if (!mounted) return;
+
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Error al eliminar"),
+                  ),
+                );
+              }
+            },
+            child: const Text(
+              "Eliminar",
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
       ),
     );
   }

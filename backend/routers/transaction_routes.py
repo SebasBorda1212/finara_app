@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal
 from models import Transaction, User
@@ -57,3 +57,31 @@ def get_transactions(
     ).all()
 
     return transactions
+
+
+@router.put("/{id}")
+def update_transaction(
+    id: int,
+    transaction: schemas.TransactionCreate,
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+    data = verify_token(token)
+    user = db.query(User).filter(User.email == data["sub"]).first()
+
+    db_transaction = db.query(Transaction).filter(
+        Transaction.id == id,
+        Transaction.user_id == user.id
+    ).first()
+
+    if not db_transaction:
+        raise HTTPException(status_code=404, detail="Transacción no encontrada")
+
+    db_transaction.amount = transaction.amount
+    db_transaction.type = transaction.type
+    db_transaction.description = transaction.description
+
+    db.commit()
+    db.refresh(db_transaction)
+
+    return db_transaction

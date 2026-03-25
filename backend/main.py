@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware  # <-- IMPORTANTE: Nueva impo
 
 from database import engine
 from models import Base
-from routers import auth_routes, user_routes, ai_routes 
+from routers import auth_routes, user_routes, ai_routes, transaction_routes
 
 # Crea la aplicación backend
 app = FastAPI(
@@ -29,3 +29,4 @@ Base.metadata.create_all(bind=engine)
 app.include_router(auth_routes.router)
 app.include_router(user_routes.router)
 app.include_router(ai_routes.router)  # Tu IA ya está activa aquí
+app.include_router(transaction_routes.router)

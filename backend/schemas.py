@@ -22,3 +22,18 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str = Field(..., min_lenght=1)
+
+class TransactionCreate(BaseModel):
+    amount: float
+    type: str
+    description: str
+
+
+class TransactionResponse(BaseModel):
+    id: int
+    amount: int
+    type: str
+    description: str
+
+    class Config:
+        orm_mode = True

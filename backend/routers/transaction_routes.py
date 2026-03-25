@@ -85,3 +85,26 @@ def update_transaction(
     db.refresh(db_transaction)
 
     return db_transaction
+
+
+@router.delete("/{id}")
+def delete_transaction(
+    id: int,
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+    data = verify_token(token)
+    user = db.query(User).filter(User.email == data["sub"]).first()
+
+    transaction = db.query(Transaction).filter(
+        Transaction.id == id,
+        Transaction.user_id == user.id
+    ).first()
+
+    if not transaction:
+        raise HTTPException(status_code=404, detail="No encontrada")
+
+    db.delete(transaction)
+    db.commit()
+
+    return {"message": "Eliminada"}

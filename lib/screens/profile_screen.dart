@@ -25,10 +25,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     loadTransactions();
   }
 
+  bool isLoading = false;
+
   void loadTransactions() async {
     final auth = context.read<AuthProvider>();
 
     final data = await ApiService.getTransactions(auth.token!);
+
+    if (!mounted) return; // 🔥 SOLUCIÓN
 
     setState(() {
       transactions = data.map((e) => TransactionModel.fromMap(e)).toList();
@@ -205,62 +209,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: const Text("Cancelar"),
           ),
           TextButton(
-            onPressed: () async {
-              // VALIDACIONES PRIMERO ✅
-              if (desc.text.trim().isEmpty || amount.text.trim().isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text("Todos los campos son obligatorios")),
-                );
-                return;
-              }
+            onPressed: isLoading
+                ? null
+                : () async {
+                    setState(() => isLoading = true);
 
-              final parsedAmount = double.tryParse(amount.text);
+                    // VALIDACIONES
+                    if (desc.text.trim().isEmpty ||
+                        amount.text.trim().isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("Todos los campos son obligatorios")),
+                      );
+                      setState(() => isLoading = false);
+                      return;
+                    }
 
-              if (parsedAmount == null || parsedAmount <= 0) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Monto inválido")),
-                );
-                return;
-              }
+                    final parsedAmount = double.tryParse(amount.text);
 
-              if (desc.text.trim().length < 3) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Descripción muy corta")),
-                );
-                return;
-              }
+                    if (parsedAmount == null || parsedAmount <= 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Monto inválido")),
+                      );
+                      setState(() => isLoading = false);
+                      return;
+                    }
 
-              final auth = context.read<AuthProvider>();
+                    final auth = context.read<AuthProvider>();
 
-              bool success;
+                    bool success;
 
-              if (edit != null) {
-                success = await ApiService.updateTransaction(
-                  auth.token!,
-                  edit.id, // 🔥 IMPORTANTE
-                  type,
-                  parsedAmount,
-                  desc.text,
-                );
-              } else {
-                success = await ApiService.createTransaction(
-                  auth.token!,
-                  type,
-                  parsedAmount,
-                  desc.text,
-                );
-              }
+                    if (edit != null) {
+                      success = await ApiService.updateTransaction(
+                        auth.token!,
+                        edit.id,
+                        type,
+                        parsedAmount,
+                        desc.text,
+                      );
+                    } else {
+                      success = await ApiService.createTransaction(
+                        auth.token!,
+                        type,
+                        parsedAmount,
+                        desc.text,
+                      );
+                    }
 
-              print("GUARDADO: $success");
+                    print("GUARDADO: $success");
 
-              loadTransactions();
+                    if (!mounted) return;
 
-              if (!mounted) return;
+                    Navigator.pop(context); // 🔥 primero cerrar
 
-              Navigator.pop(context);
-            },
-            child: const Text("Guardar"),
+                    loadTransactions();
+
+                    setState(() => isLoading = false);
+                  },
+            child: isLoading
+                ? const CircularProgressIndicator()
+                : const Text("Guardar"),
           ),
         ],
       ),

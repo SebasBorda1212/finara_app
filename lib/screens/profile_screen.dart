@@ -415,7 +415,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
 
-  // Mejorar a futuro
+  // Mejorar a futuron (no joda)
 
   // 🔒 Confirmación logout
   // void _confirmLogout(BuildContext context) {
